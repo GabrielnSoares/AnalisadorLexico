@@ -1,0 +1,9 @@
+int a;
+double b;
+a = 5 + 5;
+b = 3.14 * 2.0;
+if (a > b) {
+    a = a - b;
+}
+// Testando comentário
+Ç @ Á

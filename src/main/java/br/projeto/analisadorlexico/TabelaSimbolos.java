@@ -12,8 +12,12 @@ public class TabelaSimbolos {
         System.out.println("\nTabela de símbolos:");
         System.out.printf("%-20s %-20s %-40s%n", "Símbolo", "Tipo", "Descrição");
         System.out.println("----------------------------------------------------------------------");
+        Set<String> impressos = new HashSet<>();
         for (EntradaTabelaSimbolos entrada : simbolos) {
-            System.out.printf("%-20s %-20s %-40s%n", entrada.getIdentificador(), entrada.getTipo(), entrada.getDescricao());
+            if (!impressos.contains(entrada.getIdentificador())) {
+                System.out.printf("%-20s %-20s %-40s%n", entrada.getIdentificador(), entrada.getTipo(), entrada.getDescricao());
+                impressos.add(entrada.getIdentificador());
+            }
         }
     }
 
@@ -22,7 +26,7 @@ public class TabelaSimbolos {
         agrupados.put("Palavras Reservadas", new ArrayList<>());
         agrupados.put("Operadores", new ArrayList<>());
         agrupados.put("Pontuação", new ArrayList<>());
-        agrupados.put("Parênteses", new ArrayList<>());
+        agrupados.put("Delimitadores", new ArrayList<>());
         agrupados.put("Atribuição", new ArrayList<>());
         agrupados.put("Identificadores", new ArrayList<>());
         agrupados.put("Numerais", new ArrayList<>());
@@ -34,8 +38,8 @@ public class TabelaSimbolos {
                 agrupados.get("Operadores").add(entrada);
             } else if (entrada.getTipo().equals("Pontuação")) {
                 agrupados.get("Pontuação").add(entrada);
-            } else if (entrada.getTipo().equals("Parêntese")) {
-                agrupados.get("Parênteses").add(entrada);
+            } else if (entrada.getTipo().equals("Delimitador")) {
+                agrupados.get("Delimitadores").add(entrada);
             } else if (entrada.getTipo().equals("Atribuição")) {
                 agrupados.get("Atribuição").add(entrada);
             } else if (entrada.getTipo().equals("Identificador")) {

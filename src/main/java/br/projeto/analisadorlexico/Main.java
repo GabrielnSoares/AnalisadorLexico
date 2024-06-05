@@ -6,10 +6,12 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         AnalisadorLexico analisador = new AnalisadorLexico();
 
+        // Mensagem de boas-vindas
         System.out.println("=====================================");
         System.out.println(" Bem-vindo ao Analisador Léxico em Java");
         System.out.println("=====================================");
 
+        // Mostrar tabela de símbolos cadastrados no início
         System.out.println("\nTabela de símbolos disponíveis no sistema:");
         analisador.mostrarTabelaSimbolos();
 
@@ -28,10 +30,10 @@ public class Main {
 
             System.out.println("\nDeseja continuar usando o programa? (s/n)");
             escolha = scanner.nextLine().trim().toLowerCase();
-            analisador.resetarAnalise();
+            analisador.resetarAnalise(); // Resetar a análise para a próxima execução
         } while (escolha.equals("s"));
 
-        System.out.println("Obrigado por usar o Analisador Léxico!");
+        System.out.println("Obrigado por usar o Analisador Léxico em Java. Até a próxima!");
         scanner.close();
     }
 }

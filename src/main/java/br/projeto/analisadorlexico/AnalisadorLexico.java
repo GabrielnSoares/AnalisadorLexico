@@ -15,7 +15,7 @@ public class AnalisadorLexico {
 
     private static final Map<String, String> OPERADORES = Map.of(
             "+", "Adição",
-            "-", "Subtração",
+            "-", "subtração",
             "*", "Multiplicação",
             "/", "Divisão",
             "<", "Menor que",
@@ -43,15 +43,14 @@ public class AnalisadorLexico {
 
     private static final String ATRIBUICAO = "=";
     private static final Pattern IDENTIFICADOR = Pattern.compile("[a-zA-Z_]\\w{0,29}");
-    private static final Pattern NUMERAL = Pattern.compile("\\d{1,9}(\\.\\d*([eE][+-]?\\d{1,9})?)?");
+    private static final Pattern NUMERAL = Pattern.compile("\\d+");
 
-    // Sequências de escape ANSI para colorir a saída
+    // colorir a saída com erro
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
 
-    private TabelaSimbolos tabelaSimbolosInicial = new TabelaSimbolos();
+    private TabelaSimbolos tabelaSimbolosInicial = new TabelaSimbolos(); //ajustar depois
     private TabelaSimbolos tabelaSimbolosDinamica = new TabelaSimbolos();
-    private Set<String> simbolosReconhecidos = new HashSet<>();
 
     public AnalisadorLexico() {
         inicializarTabelaSimbolos();
@@ -75,12 +74,11 @@ public class AnalisadorLexico {
 
     public void resetarAnalise() {
         tabelaSimbolosDinamica = new TabelaSimbolos();
-        simbolosReconhecidos.clear();
     }
 
     private List<String> separarTokens(String linha) {
         List<String> tokens = new ArrayList<>();
-        Matcher matcher = Pattern.compile("\\w+|[=<>!]=|\\S").matcher(linha);
+        Matcher matcher = Pattern.compile("\\d+|[a-zA-Z_]\\w*|[=<>!]=|\\S").matcher(linha);
         while (matcher.find()) {
             tokens.add(matcher.group());
         }
@@ -90,36 +88,27 @@ public class AnalisadorLexico {
     private void classificarToken(String token) {
         if (token.isEmpty()) return;
 
-        if (simbolosReconhecidos.contains(token)) return;
-
         if (PALAVRAS_RESERVADAS.containsKey(token)) {
             System.out.println("Token: " + token + " | Tipo: Palavra Reservada");
             tabelaSimbolosDinamica.adicionar(token, "Palavra Reservada", PALAVRAS_RESERVADAS.get(token));
-            simbolosReconhecidos.add(token);
         } else if (OPERADORES.containsKey(token)) {
             System.out.println("Token: " + token + " | Tipo: Operador");
             tabelaSimbolosDinamica.adicionar(token, "Operador", OPERADORES.get(token));
-            simbolosReconhecidos.add(token);
         } else if (SIMBOLOS.containsKey(token)) {
             System.out.println("Token: " + token + " | Tipo: Pontuação");
             tabelaSimbolosDinamica.adicionar(token, "Pontuação", SIMBOLOS.get(token));
-            simbolosReconhecidos.add(token);
         } else if (DELIMITADORES.containsKey(token)) {
             System.out.println("Token: " + token + " | Tipo: Delimitador");
             tabelaSimbolosDinamica.adicionar(token, "Delimitador", DELIMITADORES.get(token));
-            simbolosReconhecidos.add(token);
         } else if (token.equals(ATRIBUICAO)) {
             System.out.println("Token: " + token + " | Tipo: Atribuição");
             tabelaSimbolosDinamica.adicionar(token, "Atribuição", "Usado para atribuir valor a uma variável");
-            simbolosReconhecidos.add(token);
         } else if (NUMERAL.matcher(token).matches()) {
             System.out.println("Token: " + token + " | Tipo: Numeral");
             tabelaSimbolosDinamica.adicionar(token, "Numeral", "Número");
-            simbolosReconhecidos.add(token);
         } else if (IDENTIFICADOR.matcher(token).matches()) {
             System.out.println("Token: " + token + " | Tipo: Identificador");
             tabelaSimbolosDinamica.adicionar(token, "Identificador", "Nome de variável ou função");
-            simbolosReconhecidos.add(token);
         } else {
             System.out.println(ANSI_RED + "Erro: Token desconhecido: " + token + ANSI_RESET);
         }
@@ -152,8 +141,8 @@ public class AnalisadorLexico {
         }
         tabelaSimbolosInicial.adicionar(ATRIBUICAO, "Atribuição", "Usado para atribuir valor a uma variável");
 
+        // Adiciona exemplos de identificadores e números
         tabelaSimbolosInicial.adicionar("A-Z, a-z, _", "Identificador", "Letras maiúsculas, minúsculas ou sublinhado, usado como nome de variável ou função");
-        tabelaSimbolosInicial.adicionar("1", "Numeral", "Número");
-        tabelaSimbolosInicial.adicionar("1.0", "Numeral", "Número");
+        tabelaSimbolosInicial.adicionar("0-9", "Numeral", "Número");
     }
 }
